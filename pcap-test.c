@@ -96,6 +96,12 @@ u_int8_t print_ipv6(Ipv4* ip){
     return ip->ip_p;
 }
 
+u_int8_t print_tcp(Tcp* tcp){
+    printf("\n[Tcp]\n");
+    printf("DST PORT : %d\n", ntohs(tcp->th_dport));
+    printf("SRC PORT : %d\n", ntohs(tcp->th_sport));
+}
+
 void print_packet(const u_char* packet){
     Ethernet* ethernet = (Ethernet*) packet;
     u_int16_t ether_type = print_ethernet(ethernet);
@@ -107,11 +113,11 @@ void print_packet(const u_char* packet){
     
     if(protocol != 0x06) return;
 
-    printf("ip header length : %02x %02x\n",ip->ip_v_n_hl >> 4, ip->ip_v_n_hl & 0x00ff);
-    // Tcp* tcp = (Tcp*) (packet + sizeof(Ethernet) + );
-
-
-
+    u_int8_t ip_v = ip->ip_v_n_hl >> 4;
+    u_int8_t ip_hl = ip->ip_v_n_hl & 0x0f;
+    printf("ip header length : %d %d\n", ip_v, ip_hl);
+    
+    Tcp* tcp = (Tcp*) (packet + sizeof(Ethernet) + (ip_hl * 4));
 
     for(int i = 0; i < 32; i++) printf("="); printf("\n");
 }
