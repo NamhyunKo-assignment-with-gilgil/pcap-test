@@ -54,12 +54,34 @@ typedef struct my_tcp_hdr{	/* tcp_hdr */
     u_int16_t th_urp;	/* urgent pointer */
 } Tcp;
 
+u_int16_t print_ethernet_packet(Ethernet* ethernet){
+    printf("[Ethernet]\n");
+    printf("DST MAC : ");
+    for (int i = 0; i < 6 ; i++) {
+        printf("%02x",ethernet->ether_dhost[i]);
+        if (i != 5) printf(":");
+        else printf("\n");
+    }
+    printf("SRC MAC : ");
+    for (int i = 0; i < 6 ; i++) {
+        printf("%02x",ethernet->ether_shost[i]);
+        if (i != 5) printf(":");
+        else printf("\n");
+    }
+    printf("Protocol : %04x\n", ntohs(ethernet->ether_type));
+    
+    return ntohs(ethernet->ether_type);
+}
+
 void print_packet(const u_char* packet){
     Ethernet* ethernet = (Ethernet*) packet;
+    u_int16_t ether_type = print_ethernet_packet(ethernet);
     
+    if(ether_type != 0x0800) return;
+    Ipv4* ip = (Ipv4*) (packet + sizeof(Ethernet));
 
-    for(int i = 0; i < 32; i++) printf("=");
-    printf("\n");
+
+    for(int i = 0; i < 32; i++) printf("="); printf("\n");
 }
 
 int main(int argc, char* argv[]) {
