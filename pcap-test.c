@@ -24,6 +24,44 @@ bool parse(Param* param, int argc, char* argv[]) {
 	return true;
 }
 
+typedef struct my_ethernet_hdr {	/* ethernet_hdr total 14bytes */
+    u_int8_t  ether_dhost[6];	/* destination ethernet address */
+    u_int8_t  ether_shost[6];	/* source ethernet address */
+    u_int16_t ether_type;	/* protocol */
+} Ethernet;
+
+typedef struct my_ipv4_hdr {	/* ipv4_hdr */
+    u_int8_t ip_v_n_hl;	/* version & IHL(header length) */
+    u_int8_t ip_tos;	/* TOS(type of service) */
+    u_int16_t ip_len;	/* total length */
+    u_int16_t ip_id;	/* identification */
+    u_int16_t ip_off;	/* flags & fragment offset */
+    u_int8_t ip_ttl;	/* TTL(time to live) */
+    u_int8_t ip_p;	/* protocol */
+    u_int16_t ip_sum;	/* header checksum */
+    u_int32_t ip_src, ip_dst;	/* source & dest address */
+} Ipv4;
+
+typedef struct my_tcp_hdr{	/* tcp_hdr */
+    u_int16_t th_sport;	/* source port */
+    u_int16_t th_dport;	/* destination port */
+    u_int32_t th_seq;	/* sequence number */
+    u_int32_t th_ack;	/* acknowledgement number */
+	u_int8_t th_off;	/* data offset & reserved */
+    u_int8_t th_flags;	/* control flags */
+    u_int16_t th_win;	/* window */
+    u_int16_t th_sum;	/* checksum */
+    u_int16_t th_urp;	/* urgent pointer */
+} Tcp;
+
+void print_packet(const u_char* packet){
+    Ethernet* ethernet = (Ethernet*) packet;
+    
+
+    for(int i = 0; i < 32; i++) printf("=");
+    printf("\n");
+}
+
 int main(int argc, char* argv[]) {
 	if (!parse(&param, argc, argv))
 		return -1;
@@ -45,6 +83,7 @@ int main(int argc, char* argv[]) {
 			break;
 		}
 		printf("%u bytes captured\n", header->caplen);
+        print_packet(packet);
 	}
 
 	pcap_close(pcap);
