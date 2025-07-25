@@ -104,7 +104,7 @@ u_int8_t print_tcp(Tcp* tcp){
     return tcp->th_off >> 4;
 }
 
-void print_packet(const u_char* packet){
+void print_packet(const u_char* packet, u_int32_t packet_len){
     Ethernet* ethernet = (Ethernet*) packet;
     u_int16_t ether_type = print_ethernet(ethernet);
     
@@ -122,9 +122,13 @@ void print_packet(const u_char* packet){
     Tcp* tcp = (Tcp*) (packet + sizeof(Ethernet) + (ip_hl * 4));
     u_int8_t tcp_off = print_tcp(tcp);
     
-    const u_char* data_pointer = packet + sizeof(Ethernet) + (ip_hl * 4) + tcp_off;
+    u_int8_t data_pointer = sizeof(Ethernet) + (ip_hl * 4) + (tcp_off * 4);
 
-    for(u_char* p = data_pointer; p < data_pointer + 10; p++) printf("%02x ", *p);
+    printf("\nTcp Packet Header Length : %d\n", data_pointer);
+    printf("Tcp Packet Data Length : %d\n", packet_len - data_pointer);
+
+    printf("\n[Data] less 10 byte\n");
+    for(u_int8_t i = data_pointer; (i < data_pointer + 10) && (i < packet_len); i++) printf("%02x ", *(packet + i));
     printf("\n");
 
     for(int i = 0; i < 32; i++) printf("="); printf("\n");
@@ -151,7 +155,7 @@ int main(int argc, char* argv[]) {
 			break;
 		}
 		printf("%u bytes captured\n", header->caplen);
-        print_packet(packet);
+        print_packet(packet, header->caplen);
 	}
 
 	pcap_close(pcap);
