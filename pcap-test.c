@@ -54,31 +54,63 @@ typedef struct my_tcp_hdr{	/* tcp_hdr */
     u_int16_t th_urp;	/* urgent pointer */
 } Tcp;
 
-u_int16_t print_ethernet_packet(Ethernet* ethernet){
-    printf("[Ethernet]\n");
+u_int16_t print_ethernet(Ethernet* ethernet){
+    printf("\n[Ethernet]\n");
+
     printf("DST MAC : ");
     for (int i = 0; i < 6 ; i++) {
         printf("%02x",ethernet->ether_dhost[i]);
         if (i != 5) printf(":");
         else printf("\n");
     }
+
     printf("SRC MAC : ");
     for (int i = 0; i < 6 ; i++) {
         printf("%02x",ethernet->ether_shost[i]);
         if (i != 5) printf(":");
         else printf("\n");
     }
+
     printf("Protocol : %04x\n", ntohs(ethernet->ether_type));
     
     return ntohs(ethernet->ether_type);
 }
 
+u_int8_t print_ipv6(Ipv4* ip){
+    printf("\n[Ipv4]\n");
+
+    printf("DST IP : ");
+    printf("%d.", (ip->ip_dst & 0x000000ff));
+    printf("%d.", (ip->ip_dst & 0x0000ff00) >> 8);
+    printf("%d.", (ip->ip_dst & 0x00ff0000) >> 16);
+    printf("%d\n", (ip->ip_dst & 0xff000000) >> 24);
+
+    printf("SRC IP : ");
+    printf("%d.", (ip->ip_src & 0x000000ff));
+    printf("%d.", (ip->ip_src & 0x0000ff00) >> 8);
+    printf("%d.", (ip->ip_src & 0x00ff0000) >> 16);
+    printf("%d\n", (ip->ip_src & 0xff000000) >> 24);
+
+    printf("Protocol : %02x\n", ip->ip_p);
+
+    return ip->ip_p;
+}
+
 void print_packet(const u_char* packet){
     Ethernet* ethernet = (Ethernet*) packet;
-    u_int16_t ether_type = print_ethernet_packet(ethernet);
+    u_int16_t ether_type = print_ethernet(ethernet);
     
     if(ether_type != 0x0800) return;
+    
     Ipv4* ip = (Ipv4*) (packet + sizeof(Ethernet));
+    u_int8_t protocol = print_ipv6(ip);
+    
+    if(protocol != 0x06) return;
+
+    printf("ip header length : %02x %02x\n",ip->ip_v_n_hl >> 4, ip->ip_v_n_hl & 0x00ff);
+    // Tcp* tcp = (Tcp*) (packet + sizeof(Ethernet) + );
+
+
 
 
     for(int i = 0; i < 32; i++) printf("="); printf("\n");
