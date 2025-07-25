@@ -1,6 +1,5 @@
 ## 과제 설명
 
----
 
 https://gitlab.com/gilgil/sns/-/wikis/basic-header-analysis/basic-header-analysis
 
@@ -10,7 +9,6 @@ https://gitlab.com/gilgil/sns/-/wikis/pcap-programming/report-pcap-test
 
 ## 공부 내용
 
----
 
 ### 구조체
 
@@ -43,7 +41,6 @@ https://en.wikipedia.org/wiki/Transmission_Control_Protocol
 
 ## 소스 코드 설명
 
----
 
 ### 라이브러리 불러오기
 
