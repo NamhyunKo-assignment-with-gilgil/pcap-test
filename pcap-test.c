@@ -100,6 +100,8 @@ u_int8_t print_tcp(Tcp* tcp){
     printf("\n[Tcp]\n");
     printf("DST PORT : %d\n", ntohs(tcp->th_dport));
     printf("SRC PORT : %d\n", ntohs(tcp->th_sport));
+
+    return tcp->th_off >> 4;
 }
 
 void print_packet(const u_char* packet){
@@ -118,6 +120,12 @@ void print_packet(const u_char* packet){
     printf("ip header length : %d %d\n", ip_v, ip_hl);
     
     Tcp* tcp = (Tcp*) (packet + sizeof(Ethernet) + (ip_hl * 4));
+    u_int8_t tcp_off = print_tcp(tcp);
+    
+    const u_char* data_pointer = packet + sizeof(Ethernet) + (ip_hl * 4) + tcp_off;
+
+    for(u_char* p = data_pointer; p < data_pointer + 10; p++) printf("%02x ", *p);
+    printf("\n");
 
     for(int i = 0; i < 32; i++) printf("="); printf("\n");
 }
