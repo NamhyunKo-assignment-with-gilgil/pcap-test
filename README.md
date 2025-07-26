@@ -7,6 +7,11 @@ https://gitlab.com/gilgil/sns/-/wikis/pcap-programming/pcap-programming
 
 https://gitlab.com/gilgil/sns/-/wikis/pcap-programming/report-pcap-test
 
+### 실행 동영상
+
+
+https://youtu.be/uezmtE6vs44
+
 ## 공부 내용
 
 
