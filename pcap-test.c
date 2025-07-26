@@ -127,8 +127,8 @@ void print_packet(const u_char* packet, u_int32_t packet_len){
     printf("\nTcp Packet Header Length : %d\n", data_pointer);
     printf("Tcp Packet Data Length : %d\n", packet_len - data_pointer);
 
-    printf("\n[Data] less 10 byte\n");
-    for(u_int8_t i = data_pointer; (i < data_pointer + 10) && (i < packet_len); i++) printf("%02x ", *(packet + i));
+    printf("\n[Data] less 20 byte\n");
+    for(u_int8_t i = data_pointer; (i < data_pointer + 20) && (i < packet_len); i++) printf("%02x ", *(packet + i));
     printf("\n");
 
     for(int i = 0; i < 32; i++) printf("="); printf("\n");
